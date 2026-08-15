@@ -1,0 +1,195 @@
+* { box-sizing: border-box; }
+body { 
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background-color: #f4f4f9;
+    padding: 10px; margin: 0;
+}
+
+.container { 
+    max-width: 600px; 
+    margin: 0 auto; 
+    background: white; 
+    padding: 15px; 
+    border-radius: 12px; 
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
+}
+
+h2, h3 { 
+    text-align: center; 
+    color: #333; 
+    margin-top: 0; 
+}
+
+#game-screen { 
+    display: none; 
+}
+
+input[type="text"] { 
+    width: 100%; padding: 
+    12px; margin: 8px 0 16px 0; 
+    border: 1px solid #ccc; 
+    border-radius: 8px; 
+    font-size: 16px; 
+}
+
+button { 
+    width: 100%; 
+    padding: 15px; 
+    font-size: 16px; 
+    font-weight: bold; 
+    cursor: pointer; 
+    border: none; 
+    border-radius: 8px; 
+    background-color: #2196f3; 
+    color: white; transition: 
+    background-color 0.2s; 
+}
+
+button:active { 
+    background-color: #1976d2; 
+}
+
+button:disabled { 
+    background-color: #ccc; 
+    cursor: not-allowed; 
+}
+
+.mode-select-area label { 
+    display: block; 
+    padding: 12px; 
+    background: #fff; 
+    border: 2px solid #ddd; 
+    border-radius: 8px; 
+    margin-bottom: 10px; 
+    cursor: pointer; 
+}
+
+.mode-select-area input[type="radio"] { 
+    transform: scale(1.3);
+    margin-right: 8px;
+}
+
+.mode-desc { 
+    font-size: 0.85em; 
+    color: #666; 
+    display: block; 
+    margin-top: 4px; 
+    margin-left: 26px; 
+}
+
+.theme-box { 
+    background-color: #e3f2fd; 
+    padding: 15px; border-radius: 
+    8px; margin: 15px 0; 
+    font-weight: bold; 
+    text-align: center; 
+    font-size: 1.1em; 
+    color: #0d47a1; 
+    border: 2px solid #bbdefb; 
+}
+
+#my-cards-container { 
+    display: flex; 
+    gap: 10px; 
+    justify-content: center; 
+    flex-wrap: wrap; 
+    margin: 20px 0; 
+}
+
+/* 自分のカード */
+.my-card {
+    background-color: #ff9800; 
+    color: white; 
+    font-weight: bold; 
+    text-align: center;
+    padding: 15px; 
+    border-radius: 12px; 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center;
+    flex: 1 1 45%; 
+    max-width: 140px; 
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    border: 4px solid transparent; 
+}
+
+.my-card .number { 
+    font-size: 3em; 
+    margin-bottom: 10px; 
+}
+
+.play-btn { 
+    background-color: white; 
+    color: #ff9800; 
+    padding: 12px; 
+    width: 100%; 
+    margin-top: auto; 
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+}
+
+/* 場に出たカード（表と裏） */
+#played-cards-area { 
+    padding: 10px 0; 
+    text-align: center; 
+}
+.played-card { 
+    background-color: #e0e0e0; 
+    padding: 12px; 
+    border-radius: 8px; 
+    text-align: center; 
+    min-width: 70px; 
+    display: inline-block; 
+    margin: 5px 0; 
+}
+.played-card .number { 
+    font-size: 1.8em; 
+    font-weight: bold; 
+    color: #333; 
+}
+.played-card .name { 
+    font-size: 0.9em; 
+    color: #666; 
+    margin-top: 4px; 
+}
+
+/* 裏向きの時のデザイン */
+.hidden-card { 
+    background-color: #607d8b; 
+    color: white; 
+    border: 2px dashed #90a4ae; 
+}
+.hidden-card .number { 
+    color: white; 
+    font-size: 2em; 
+}
+.hidden-card .name { 
+    color: #cfd8dc; 
+}
+
+/* 挿入用の「＋」ボタン */
+.insert-btn { 
+    background-color: #4caf50; 
+    color: white; 
+    border: none; 
+    cursor: pointer; 
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2); 
+}
+.insert-plus { 
+    border-radius: 50%;
+    width: 34px; 
+    height: 34px; 
+    padding: 0; 
+    font-size: 20px; 
+    display: inline-flex; 
+    align-items: center; 
+    justify-content: center; 
+    margin: 0 5px; 
+}
+.insert-large { 
+    border-radius: 8px; 
+    padding: 12px; 
+    font-size: 16px; 
+    font-weight: bold; 
+    width: auto; 
+    margin-top: 10px; 
+}
