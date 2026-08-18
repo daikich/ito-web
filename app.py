@@ -56,7 +56,8 @@ def handle_join(data):
             'theme': '',
             'played_cards': [],
             'players': {},
-            'stage': 1
+            'stage': 1,
+            'comments': {}
         }
     
     # プレイヤー情報を登録
@@ -91,6 +92,7 @@ def handle_start_game(data):
     # お題をランダムに決定し、場に出たカードをリセット
     game['theme'] = random.choice(THEMES)
     game['played_cards'] = []
+    game['comments'] = {}
 
     # 変更：モードによって配る枚数を決定する
     # normalならステージ数と同じ枚数、singleなら常に1枚
@@ -196,6 +198,17 @@ def handle_disband_room(data):
     
     # ルーム全員に解散の合図を送る
     emit('room_disbanded', {}, to=room)
+
+# コメントが編集された時の処理
+@socketio.on('edit_comment')
+def handle_edit_comment(data):
+    room = data['room']
+    if room in games:
+        card = str(data['card'])
+        # サーバーにコメントを保存
+        games[room]['comments'][card] = data['text']
+        # ルーム全員に最新のコメント一覧を送信
+        emit('comments_updated', games[room]['comments'], to=room)
 
 if __name__ == '__main__':
     socketio.run(app, host='0.0.0.0', port=5000, debug=True)

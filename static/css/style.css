@@ -20,6 +20,13 @@ h2, h3 {
     margin-top: 0; 
 }
 
+a {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
 #game-screen { 
     display: none; 
 }
@@ -192,4 +199,20 @@ button:disabled {
     font-weight: bold; 
     width: auto; 
     margin-top: 10px; 
+}
+
+/* コメント入力欄のデザイン */
+.comment-input {
+    width: 100%;
+    padding: 6px;
+    margin: 8px 0;
+    font-size: 0.9em;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.9);
+    color: #333;
+}
+.hidden-card .comment-input {
+    background-color: rgba(255, 255, 255, 0.8);
 }
