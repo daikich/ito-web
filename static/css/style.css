@@ -2,7 +2,8 @@
 body { 
     font-family: 'Helvetica Neue', Arial, sans-serif;
     background-color: #f4f4f9;
-    padding: 10px; margin: 0;
+    padding: 10px; 
+    margin: 0;
 }
 
 .container { 
@@ -32,8 +33,9 @@ a {
 }
 
 input[type="text"] { 
-    width: 100%; padding: 
-    12px; margin: 8px 0 16px 0; 
+    width: 100%; 
+    padding: 12px; 
+    margin: 8px 0 16px 0; 
     border: 1px solid #ccc; 
     border-radius: 8px; 
     font-size: 16px; 
@@ -48,8 +50,8 @@ button {
     border: none; 
     border-radius: 8px; 
     background-color: #2196f3; 
-    color: white; transition: 
-    background-color 0.2s; 
+    color: white; 
+    transition: background-color 0.2s; 
 }
 
 button:active { 
@@ -86,8 +88,9 @@ button:disabled {
 
 .theme-box { 
     background-color: #e3f2fd; 
-    padding: 15px; border-radius: 
-    8px; margin: 15px 0; 
+    padding: 15px; 
+    border-radius: 8px; 
+    margin: 15px 0; 
     font-weight: bold; 
     text-align: center; 
     font-size: 1.1em; 
@@ -103,7 +106,9 @@ button:disabled {
     margin: 20px 0; 
 }
 
-/* 自分のカード */
+/* =========================================
+   自分のカード
+   ========================================= */
 .my-card {
     background-color: #ff9800; 
     color: white; 
@@ -134,25 +139,47 @@ button:disabled {
     box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
 }
 
-/* 場に出たカード（表と裏） */
+/* =========================================
+   場に出たカードと＋ボタンのデザイン
+   ========================================= */
 #played-cards-area { 
     padding: 10px 0; 
     text-align: center; 
 }
+
+/* 横スクロール用のタイムラインコンテナ */
+.timeline-container {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap; /* 絶対に折り返さない（一直線にする） */
+    overflow-x: auto;  /* 画面からはみ出た分は横スクロールさせる */
+    padding: 15px 10px;
+    gap: 10px; /* カードと＋ボタンの隙間 */
+}
+
+/* カードが少ない時は中央寄せ、多い時は左詰めでスクロールさせる安全な魔法 */
+.timeline-container::before,
+.timeline-container::after {
+    content: "";
+    margin: auto;
+}
+
+/* 場に出たカード（縮まないように固定幅にする） */
 .played-card { 
     background-color: #e0e0e0; 
     padding: 12px; 
     border-radius: 8px; 
     text-align: center; 
-    min-width: 70px; 
-    display: inline-block; 
-    margin: 5px 0; 
+    flex-shrink: 0; /* 画面が狭くても絶対にカードを潰さない */
+    width: 140px;   /* カードの幅を固定 */
 }
+
 .played-card .number { 
     font-size: 1.8em; 
     font-weight: bold; 
     color: #333; 
 }
+
 .played-card .name { 
     font-size: 0.9em; 
     color: #666; 
@@ -165,15 +192,17 @@ button:disabled {
     color: white; 
     border: 2px dashed #90a4ae; 
 }
+
 .hidden-card .number { 
     color: white; 
     font-size: 2em; 
 }
+
 .hidden-card .name { 
     color: #cfd8dc; 
 }
 
-/* 挿入用の「＋」ボタン */
+/* 挿入用の「＋」ボタン（これも縮まないようにする） */
 .insert-btn { 
     background-color: #4caf50; 
     color: white; 
@@ -181,17 +210,19 @@ button:disabled {
     cursor: pointer; 
     box-shadow: 0 2px 4px rgba(0,0,0,0.2); 
 }
+
 .insert-plus { 
+    flex-shrink: 0; /* 画面が狭くても潰れないようにする */
     border-radius: 50%;
-    width: 34px; 
-    height: 34px; 
+    width: 36px; 
+    height: 36px; 
     padding: 0; 
     font-size: 20px; 
-    display: inline-flex; 
+    display: flex; 
     align-items: center; 
     justify-content: center; 
-    margin: 0 5px; 
 }
+
 .insert-large { 
     border-radius: 8px; 
     padding: 12px; 
@@ -201,7 +232,9 @@ button:disabled {
     margin-top: 10px; 
 }
 
-/* コメント入力欄のデザイン */
+/* =========================================
+   コメント入力欄のデザイン
+   ========================================= */
 .comment-input {
     width: 100%;
     padding: 6px;
@@ -213,6 +246,19 @@ button:disabled {
     background-color: rgba(255, 255, 255, 0.9);
     color: #333;
 }
+
 .hidden-card .comment-input {
     background-color: rgba(255, 255, 255, 0.8);
+}
+
+/* 他の人のコメント（編集不可）の時のデザイン */
+.comment-input[readonly] {
+    background-color: transparent;
+    border: 1px solid transparent;
+    color: #333;
+    pointer-events: none;
+}
+
+.hidden-card .comment-input[readonly] {
+    color: #fff;
 }

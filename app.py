@@ -94,7 +94,7 @@ def handle_start_game(data):
     game['played_cards'] = []
     game['comments'] = {}
 
-    # 変更：モードによって配る枚数を決定する
+    # モードによって配る枚数を決定する
     # normalならステージ数と同じ枚数、singleなら常に1枚
     card_count = stage if mode == 'normal' else 1
 
