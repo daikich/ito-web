@@ -262,3 +262,28 @@ button:disabled {
 .hidden-card .comment-input[readonly] {
     color: #fff;
 }
+
+/* =========================================
+   キック（追放）ボタンのデザイン
+   ========================================= */
+.kick-btn {
+    width: 20px !important;
+    height: 20px !important;
+    padding: 0 !important;
+    margin: 0 0 0 5px !important;
+    background-color: #ff5252 !important;
+    color: white !important;
+    border: none;
+    border-radius: 50% !important;
+    font-size: 12px !important;
+    font-weight: bold;
+    cursor: pointer;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+    box-shadow: none !important;
+}
+.kick-btn:active {
+    background-color: #d50000 !important;
+}
