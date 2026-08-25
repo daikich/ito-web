@@ -2,7 +2,7 @@ const socket = io();
 
 // 現在自分がいるルーム名と自分の名前を記憶しておく変数
 let currentRoom = '';
-let myName = ''; // 自分の名前
+let myName = ''; 
 
 // ゲームの状態を記憶しておく変数
 let selectedCard = null;      
@@ -26,7 +26,7 @@ function joinRoom() {
     if (!name || !room) return alert('名前とルーム名を入力してください。');
     
     currentRoom = room;
-    myName = name; // ★追加：入力された自分の名前を記憶しておく
+    myName = name; // 入力された自分の名前を記憶しておく
     
     socket.emit('join', { name: name, room: room });
 
@@ -52,7 +52,6 @@ function kickPlayer(targetName) {
         socket.emit('kick_player', { room: currentRoom, target_name: targetName });
     }
 }
-
 
 // ==========================================
 // ゲーム進行関連の処理
@@ -135,21 +134,22 @@ function renderPlayedCards() {
     }
     
     let html = '<div class="timeline-container">';
-
+    
     for (let i = 0; i <= currentPlayedCards.length; i++) {
+        
+        // ＋ボタンの描画
         if (selectedCard !== null && !isRevealed) {
             html += `<button class="insert-btn insert-plus" onclick="playSelectedCard(${i})">＋</button>`;
-        } else {
-            html += `<div style="width: 10px;"></div>`;
         }
         
         if (i < currentPlayedCards.length) {
             const item = currentPlayedCards[i];
             const commentText = cardComments[item.card] || ''; 
             
+            // 自分が出したカードかどうかの判定
             const isMine = (item.name === myName);
-            const readonlyAttr = isMine ? '' : 'readonly';
-            const placeholderText = isMine ? 'コメント' : '';
+            const readonlyAttr = isMine ? '' : 'readonly'; 
+            const placeholderText = isMine ? 'コメント...' : ''; 
             
             if (isRevealed) {
                 html += `
@@ -179,7 +179,34 @@ function renderPlayedCards() {
 // ==========================================
 
 socket.on('update_players', function(players) {
-    document.getElementById('players-display').innerText = players.join(', ');
+    const display = document.getElementById('players-display');
+    display.innerHTML = ''; // 一旦クリア
+    
+    players.forEach((pName, index) => {
+        const span = document.createElement('span');
+        span.innerText = pName;
+        span.style.display = 'inline-flex';
+        span.style.alignItems = 'center';
+        
+        // 自分「以外」のプレイヤーにはキックボタン(✕)をつける
+        if (pName !== myName) {
+            const kickBtn = document.createElement('button');
+            kickBtn.innerText = '✕';
+            kickBtn.className = 'kick-btn';
+            kickBtn.onclick = () => kickPlayer(pName);
+            span.appendChild(kickBtn);
+        }
+        
+        display.appendChild(span);
+        
+        // 最後のプレイヤーじゃなければカンマで区切る
+        if (index < players.length - 1) {
+            const comma = document.createElement('span');
+            comma.innerText = ', ';
+            comma.style.marginRight = '5px';
+            display.appendChild(comma);
+        }
+    });
 });
 
 socket.on('receive_cards', function(data) {
@@ -279,4 +306,9 @@ socket.on('comments_updated', function(comments) {
         const playedInput = document.getElementById('comment-played-' + cardNum);
         if (playedInput && document.activeElement !== playedInput) playedInput.value = text;
     });
+});
+
+socket.on('kicked', function() {
+    alert('ルームからキックされました。');
+    window.location.reload(); 
 });
