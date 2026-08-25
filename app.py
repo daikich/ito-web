@@ -228,6 +228,35 @@ def handle_kick_player(data):
                 player_names = [p['name'] for p in games[room]['players'].values()]
                 emit('update_players', player_names, to=room)
 
+# カードを手札に戻す（置き直す）処理
+@socketio.on('return_card')
+def handle_return_card(data):
+    room = data['room']
+    sid = request.sid
+    returned_card = int(data['card'])
+
+    if room in games and sid in games[room]['players']:
+        game = games[room]
+        player = game['players'][sid]
+
+        # 場のカードリストから、自分が置いた該当のカードを探す
+        for i, item in enumerate(game['played_cards']):
+            if item['card'] == returned_card and item['name'] == player['name']:
+                # 場から削除
+                game['played_cards'].pop(i)
+                # プレイヤーの手札に戻し、数字の小さい順に並べ直す
+                player['cards'].append(returned_card)
+                player['cards'].sort()
+
+                # その人だけに新しい手札を送信
+                emit('receive_cards', {'cards': player['cards']}, to=sid)
+                # ルーム全員に、カードが減った新しい場の状態を送信
+                emit('card_played', {'played_cards': game['played_cards']}, to=room)
+                
+                # 「全員出し終わった」状態をキャンセルしてボタンを隠す合図を送る
+                emit('cancel_all_played', {}, to=room)
+                break
+
 
 # コメントが編集された時の処理
 @socketio.on('edit_comment')
