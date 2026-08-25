@@ -46,6 +46,14 @@ function disbandRoom() {
     }
 }
 
+// 特定のプレイヤーをキックする処理
+function kickPlayer(targetName) {
+    if (confirm(`${targetName} さんをルームからキックしますか？`)) {
+        socket.emit('kick_player', { room: currentRoom, target_name: targetName });
+    }
+}
+
+
 // ==========================================
 // ゲーム進行関連の処理
 // ==========================================
