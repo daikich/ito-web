@@ -199,6 +199,36 @@ def handle_disband_room(data):
     # ルーム全員に解散の合図を送る
     emit('room_disbanded', {}, to=room)
 
+# プレイヤーのキック処理
+@socketio.on('kick_player')
+def handle_kick_player(data):
+    room = data['room']
+    target_name = data['target_name']
+    
+    if room in games:
+        target_sid = None
+        # 名前が一致するプレイヤーを探す
+        for sid, p in games[room]['players'].items():
+            if p['name'] == target_name:
+                target_sid = sid
+                break
+        
+        if target_sid:
+            # キックされた本人に「キックされたよ」と合図を送る
+            emit('kicked', {}, to=target_sid)
+            
+            # サーバーのルームからその人を削除
+            del games[room]['players'][target_sid]
+            
+            # 誰もいなくなったらルームごと削除
+            if len(games[room]['players']) == 0:
+                del games[room]
+            else:
+                # 残っているメンバーに参加者リストが減ったことを通知
+                player_names = [p['name'] for p in games[room]['players'].values()]
+                emit('update_players', player_names, to=room)
+
+
 # コメントが編集された時の処理
 @socketio.on('edit_comment')
 def handle_edit_comment(data):
