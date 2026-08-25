@@ -26,7 +26,7 @@ function joinRoom() {
     if (!name || !room) return alert('名前とルーム名を入力してください。');
     
     currentRoom = room;
-    myName = name; // 入力された自分の名前を記憶しておく
+    myName = name; 
     
     socket.emit('join', { name: name, room: room });
 
@@ -46,7 +46,6 @@ function disbandRoom() {
     }
 }
 
-// 特定のプレイヤーをキックする処理
 function kickPlayer(targetName) {
     if (confirm(`${targetName} さんをルームからキックしますか？`)) {
         socket.emit('kick_player', { room: currentRoom, target_name: targetName });
@@ -116,6 +115,11 @@ function playSelectedCard(index) {
     renderPlayedCards(); 
 }
 
+// ★追加：場に出たカードを手札に戻す処理
+function returnCard(cardNumber) {
+    socket.emit('return_card', { room: currentRoom, card: cardNumber });
+}
+
 // ==========================================
 // 画面の描画（HTML生成）関連の処理
 // ==========================================
@@ -137,7 +141,6 @@ function renderPlayedCards() {
     
     for (let i = 0; i <= currentPlayedCards.length; i++) {
         
-        // ＋ボタンの描画
         if (selectedCard !== null && !isRevealed) {
             html += `<button class="insert-btn insert-plus" onclick="playSelectedCard(${i})">＋</button>`;
         }
@@ -146,7 +149,6 @@ function renderPlayedCards() {
             const item = currentPlayedCards[i];
             const commentText = cardComments[item.card] || ''; 
             
-            // 自分が出したカードかどうかの判定
             const isMine = (item.name === myName);
             const readonlyAttr = isMine ? '' : 'readonly'; 
             const placeholderText = isMine ? 'コメント...' : ''; 
@@ -160,11 +162,15 @@ function renderPlayedCards() {
                     </div>
                 `;
             } else {
+                // ★追加：自分が出したカードの裏向き状態の時だけ「手札に戻す」ボタンを描画する
+                const returnBtnHtml = isMine ? `<button class="return-btn" onclick="returnCard(${item.card})">手札に戻す</button>` : '';
+
                 html += `
                     <div class="played-card hidden-card">
                         <div class="number">?</div>
                         <div class="name">${item.name}</div>
                         <input type="text" class="comment-input" id="comment-played-${item.card}" value="${commentText}" placeholder="${placeholderText}" ${readonlyAttr} onchange="sendComment(${item.card}, this.value)">
+                        ${returnBtnHtml}
                     </div>
                 `;
             }
@@ -180,7 +186,7 @@ function renderPlayedCards() {
 
 socket.on('update_players', function(players) {
     const display = document.getElementById('players-display');
-    display.innerHTML = ''; // 一旦クリア
+    display.innerHTML = ''; 
     
     players.forEach((pName, index) => {
         const span = document.createElement('span');
@@ -188,7 +194,6 @@ socket.on('update_players', function(players) {
         span.style.display = 'inline-flex';
         span.style.alignItems = 'center';
         
-        // 自分「以外」のプレイヤーにはキックボタン(✕)をつける
         if (pName !== myName) {
             const kickBtn = document.createElement('button');
             kickBtn.innerText = '✕';
@@ -199,7 +204,6 @@ socket.on('update_players', function(players) {
         
         display.appendChild(span);
         
-        // 最後のプレイヤーじゃなければカンマで区切る
         if (index < players.length - 1) {
             const comma = document.createElement('span');
             comma.innerText = ', ';
@@ -253,6 +257,11 @@ socket.on('card_played', function(data) {
 
 socket.on('all_played', function() {
     document.getElementById('next-game-area').style.display = 'block';
+});
+
+// ★追加：誰かがカードを戻した時に「結果発表」ボタンを隠す処理
+socket.on('cancel_all_played', function() {
+    document.getElementById('next-game-area').style.display = 'none';
 });
 
 socket.on('cards_revealed', function() {
